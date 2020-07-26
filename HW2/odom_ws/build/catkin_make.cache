@@ -1,0 +1,2 @@
+calib_odom
+-DCATKIN_DEVEL_PREFIX=/home/jkzhang/lidar_slam/github_repo/lidar_slam/HW2/odom_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jkzhang/lidar_slam/github_repo/lidar_slam/HW2/odom_ws/install -G Unix Makefiles

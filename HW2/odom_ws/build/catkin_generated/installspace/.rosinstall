@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/jkzhang/lidar_slam/github_repo/lidar_slam/HW2/odom_ws/install/setup.sh

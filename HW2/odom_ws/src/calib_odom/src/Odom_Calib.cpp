@@ -27,6 +27,15 @@ bool OdomCalib::Add_Data(Eigen::Vector3d Odom,Eigen::Vector3d scan)
     {
         //TODO: 构建超定方程组
         //end of TODO
+        Eigen::Matrix<double, 1, 3> odom_data;
+        odom_data(0, 0) = Odom[0];
+        odom_data(0, 1) = Odom[1];
+        odom_data(0, 2) = Odom[2];
+        for (int i = 0; i < 3; i++)
+        {
+            A.block<1, 3>(now_len * 3 + i, 3 * i) = odom_data;
+        }
+        b.block<3, 1>(now_len * 3, 0) = scan;
         now_len++;
         return true;
     }
@@ -46,8 +55,14 @@ Eigen::Matrix3d OdomCalib::Solve()
     Eigen::Matrix3d correct_matrix;
 
     //TODO: 求解线性最小二乘
+    Eigen::Matrix<double, 9, 1> params;
+    params = A.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b);
+    std::cour << params.transpose() << std::endl;
+    for (int i = 0; i < 3; i ++)
+    {
+        correct_matrix.block<1, 3>(i, 0) = params.block<3, 1>(i * 3, 0).transpose();
+    }
     //end of TODO
-
     return correct_matrix;
 }
 
