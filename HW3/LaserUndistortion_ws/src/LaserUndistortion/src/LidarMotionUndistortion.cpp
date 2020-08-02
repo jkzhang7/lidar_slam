@@ -205,6 +205,22 @@ public:
             int& beam_number)
     {
        //TODO
+       tf::Quaternion start_q = frame_start_pose.getRotation();
+       tf::Quaternion end_q = frame_end_pose.getRotation();
+       tf::Vector3 start_(frame_start_pose.getOrigin().getX(), frame_start_pose.getOrigin().getY(), 1);
+       tf::Vector3 end_(frame_end_pose.getOrigin().getX(), frame_end_pose.getOrigin().getY(), 1);
+
+       for (int i = startIndex; i < startIndex + beam_number; i++)
+       {
+           tf::Vector3 mid_xy = start_.lerp(end_, (i - startIndex) / (beam_number - 1));
+           tf::Quaternion mid_q = start_.slerp(end_, (i - startIndex) / (beam_number - 1));
+           tf::Transform mid_frame(mid_q, mid_);
+           double x = range[i] * cos(angles[i]);
+           double y = range[i] * sin(angles[i]);
+           tf::Vector3 calib_p = frame_base_pose.inverse() * mid_frame * tf::Vector3(x, y, 1);
+           range[i] = sqrt(calib_p[0] * calib_p[0] + calib_p[1] * calib_p[1]);
+           angles[i] = atan2(calib_p[1], calib_p[0]);
+       }
        //end of TODO
     }
 
